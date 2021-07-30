@@ -1,75 +1,50 @@
-import React,{useEffect,useState} from "react";
-import update from 'immutability-helper';
-// import { connect } from "react-redux";
-// import {bindActionCreators} from 'redux';
-// import * as authActions from '../../actions/authActions';
-// import { isLoaded } from 'react-redux-firebase'
-import { useHistory } from "react-router";
-
-  function Login(props) {
-    console.log(props);
-    let history = useHistory();
-    const [email,setEmail] = useState('');
-    const [password,setPassword]= useState('');
-    // useEffect(() => {
-    //   if(props.auth?.uid){
-    //     history.push('/')
-    //   }
-    // }, [props])
-const handleEmail= (e)=>{
-setEmail(e.target.value);
-}
-const handlePassword=(e)=>{
-  setPassword(e.target.value);
-}
-    const onSubmit=()=>{
+import React from 'react';
+import {fieldCd} from '../../constants/typeCodes'
+function ResumePreview(props){
+    // console.log('Resume Preview');
+    const rvContact=(key, valToAppend)=>{
+        if(props.contactSection){
+          return props.contactSection[key]?props.contactSection[key] + (valToAppend?valToAppend:'') :'';
+        }
+        return '';
+    }
     
-      // let obj = {email:email,password:password}
-      // console.log(obj)
-      // props.signIn(obj)
+    const rvEducation=(key, valToAppend)=>{
+        if(props.educationSection){
+          return props.educationSection[key]?props.educationSection[key] + (valToAppend?valToAppend:'') :'';
+        }
+        return '';
     }
 
-
-    return (
-      <>
-      {/* If we visit the login being signed in we will be unable to see the form */}
-      <>
-      {props.authMine.loading?<h4 style={{marginTop:'10%',height:'52vh'}}>Patiently Wait...we are logging you in</h4>:
-          <div className="container med contact">
-            <div className="section funnel-section">
-                <div className="form-card">
-                    <h2 className="form-heading center">Enter Login details</h2>
-                    <div className="form-section">
-                        <div className="input-group full"><label>Email</label>
-                            <div className="effect"><input type="text" name="email" value={email || ''}  onChange={handleEmail}  /><span></span>
-                            </div>
-                        </div>
-
-                        <div className="input-group full"><label>Password</label>
-                            <div className="effect"><input  type="password" name="password"  value={password || ''} onChange={handlePassword}/><span></span>
-                            </div>
-                        </div>
-                        {props.authMine?.ErrorMessage?.message?<div className="input-group full">
-                                <span className="error-message" >{props.authMine?.ErrorMessage?.message}</span> 
-                        </div> :<></>}  
-                        <div className="form-buttons">
-                            <button onClick={onSubmit} className="btn hvr-float-shadow" type='button'>Login</button>
-                        </div>
-                    </div>
+    // skin css logic
+        return (
+            <div className={props.skinCd + " resume-preview "}>
+                <div className={'name-section'}>
+                    <p className={'center contact-name text-upper' }> {rvContact(fieldCd.FirstName,' ')  + rvContact(fieldCd.LastName)}  </p>
+                    <p className={'center address'}>{rvContact(fieldCd.City,', ') + rvContact(fieldCd.State,', ') + 
+                     rvContact(fieldCd.Country,', ') + rvContact(fieldCd.ZipCode,', ')}</p>
+                    <p className={'center'}>{rvContact(fieldCd.Email ) }</p>
+                    <p className={'center'}>{rvContact(fieldCd.Phone) } </p>
                 </div>
 
+                <div className={'profSummSection text-upper'}>                   
+                    <p className="heading bold">PROFESSIONAL SUMMARY</p>
+                     <div className={'divider'}></div>
+                     <p>{rvContact(fieldCd.ProfSummary)}</p>
+                </div>
+                <div className={'educationSection text-upper'}>                   
+                    <p className="heading bold">EDUCATIONAL DETAILS</p>
+                     <div className={'divider'}></div>
+                     <p>{rvEducation(fieldCd.SchoolName)}</p>
+                     <p>{rvEducation(fieldCd.Degree)}</p>
+                     <p>{rvEducation(fieldCd.City)}</p>
+                     <p>{rvEducation(fieldCd.GraduationCGPA)}</p>
+                     <p>{rvEducation(fieldCd.GraduationDate)}</p>
+                     <p>{rvEducation(fieldCd.GraduationYear)}</p>
+                </div>
+          
             </div>
-        </div>
-  }
-  </>
-  
-        </>
-    );
-  }
+        )
+    }
 
-
-
- 
-
-
-  export default Login
+export default ResumePreview;
